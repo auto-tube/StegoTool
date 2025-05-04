@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html class="dark"> <!-- Apply dark mode directly -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+    <title>Steganography Tool</title>
+    <link rel="stylesheet" href="dist/output.css">
+</head>
+<body class="bg-gray-900 p-6 sm:p-10 font-sans flex justify-center items-start min-h-screen text-gray-300">
+
+    <div class="bg-gray-800 border border-gray-700 p-6 sm:p-8 rounded-lg shadow-xl w-full max-w-2xl space-y-8"> <!-- Reduced max-width for single column -->
+        <h1 class="text-2xl font-semibold text-center text-gray-100 mb-6">Steganography Tool</h1>
+
+        <!-- Step 1: Cover Image -->
+        <section class="space-y-3 border-t border-gray-700 pt-6">
+            <h2 class="text-lg font-medium text-gray-200">1. Select Cover Image</h2>
+            <label for="input-path" class="sr-only">Cover Image Path</label> <!-- Screen reader only -->
+            <div class="flex items-center space-x-3">
+                <input type="text" id="input-path" readonly placeholder="Select a PNG cover image..." class="block w-full px-4 py-2 border border-gray-600 rounded-md bg-gray-700/50 text-sm text-gray-300 placeholder-gray-500 focus:ring-1 focus:ring-accent-500 focus:border-accent-500 cursor-default disabled:opacity-60">
+                <button type="button" id="browse-input-btn" class="flex-shrink-0 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-gray-100 rounded-md text-sm font-medium transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed">Browse</button>
+            </div>
+        </section>
+
+        <!-- Step 2: Payload -->
+        <section class="space-y-4 border-t border-gray-700 pt-6">
+            <h2 class="text-lg font-medium text-gray-200">2. Choose Payload to Hide</h2>
+            <!-- Payload Type Selection -->
+            <fieldset>
+                 <legend class="sr-only">Payload type</legend>
+                 <div class="flex items-center space-x-6">
+                    <div class="flex items-center">
+                        <input id="payload-type-text" name="payload-type" type="radio" value="text" checked class="h-4 w-4 text-accent-600 border-gray-600 bg-gray-700 focus:ring-accent-500 focus:ring-offset-gray-800">
+                        <label for="payload-type-text" class="ml-2 block text-sm text-gray-300">Hide Text</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="payload-type-file" name="payload-type" type="radio" value="file" class="h-4 w-4 text-accent-600 border-gray-600 bg-gray-700 focus:ring-accent-500 focus:ring-offset-gray-800">
+                        <label for="payload-type-file" class="ml-2 block text-sm text-gray-300">Hide File</label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Text Payload Input -->
+            <div id="text-payload-section" class="space-y-2 pt-2">
+                <label for="secret-message" class="sr-only">Secret Text Message</label>
+                <textarea id="secret-message" rows="6" placeholder="Enter secret text message..." class="block w-full px-4 py-2 border border-gray-600 rounded-md bg-gray-700/50 text-sm text-gray-200 placeholder-gray-500 focus:ring-1 focus:ring-accent-500 focus:border-accent-500 disabled:opacity-60"></textarea>
+            </div>
+
+            <!-- File Payload Input -->
+            <div id="file-payload-section" class="space-y-2 pt-2 hidden">
+                <label for="payload-file-path" class="sr-only">File to Hide Path</label>
+                <div class="flex items-center space-x-3">
+                    <input type="text" id="payload-file-path" readonly placeholder="Select a file to hide..." class="block w-full px-4 py-2 border border-gray-600 rounded-md bg-gray-700/50 text-sm text-gray-300 placeholder-gray-500 focus:ring-1 focus:ring-accent-500 focus:border-accent-500 cursor-default disabled:opacity-60">
+                    <button type="button" id="browse-payload-btn" class="flex-shrink-0 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-gray-100 rounded-md text-sm font-medium transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed">Select File</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: Output (Encode Only) -->
+        <section class="space-y-3 border-t border-gray-700 pt-6">
+           <h2 class="text-lg font-medium text-gray-200">3. Specify Output (Encode Only)</h2>
+            <label for="output-path" class="sr-only">Output Image Path</label>
+            <div class="flex items-center space-x-3">
+                <input type="text" id="output-path" readonly placeholder="Select save location for stego image..." class="block w-full px-4 py-2 border border-gray-600 rounded-md bg-gray-700/50 text-sm text-gray-300 placeholder-gray-500 focus:ring-1 focus:ring-accent-500 focus:border-accent-500 cursor-default disabled:opacity-60">
+                <button type="button" id="browse-output-btn" class="flex-shrink-0 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-gray-100 rounded-md text-sm font-medium transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed">Save As</button>
+            </div>
+       </section>
+
+       <!-- Step 4: Password -->
+       <section class="space-y-3 border-t border-gray-700 pt-6">
+            <h2 class="text-lg font-medium text-gray-200">4. Enter Security Password</h2>
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" id="password" placeholder="Required for encryption/decryption" class="block w-full px-4 py-2 border border-gray-600 rounded-md bg-gray-700/50 text-sm text-gray-200 placeholder-gray-500 focus:ring-1 focus:ring-accent-500 focus:border-accent-500 disabled:opacity-60">
+        </section>
+
+
+        <!-- Step 5: Actions & Status -->
+        <section class="space-y-6 border-t border-gray-700 pt-8">
+             <h2 class="sr-only">Actions and Status</h2>
+             <!-- Action Buttons -->
+             <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-5">
+                 <button type="button" id="encode-btn" class="w-full sm:w-auto flex items-center justify-center px-6 py-2.5 bg-accent-600 hover:bg-accent-500 text-white rounded-md font-semibold text-base transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-accent-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                     <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" /></svg>
+                     Encode
+                 </button>
+                 <button type="button" id="decode-btn" class="w-full sm:w-auto flex items-center justify-center px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md font-semibold text-base transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                     <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                     Decode
+                 </button>
+                 <button type="button" id="clear-btn" class="w-full sm:w-auto px-6 py-2.5 bg-gray-600 hover:bg-gray-500 text-gray-100 rounded-md font-medium text-base transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                     Clear
+                 </button>
+            </div>
+
+             <!-- Progress Bar Section -->
+            <div id="progress-section" class="pt-2 space-y-1 hidden">
+                 <div class="w-full bg-gray-700 rounded-full h-2 dark:bg-gray-700 overflow-hidden">
+                    <div id="progress-bar" class="bg-accent-500 h-2 rounded-full transition-all duration-150 ease-linear" style="width: 0%"></div>
+                </div>
+                <div id="progress-text" class="text-center text-xs text-gray-400" aria-live="polite">Processing...</div> <!-- Added aria-live -->
+            </div>
+
+            <!-- Status Bar -->
+            <div id="status-bar" class="mt-4 p-3 rounded-md text-center text-sm font-medium transition-colors duration-300 border" aria-live="polite">Ready.</div> <!-- Added aria-live -->
+        </section>
+
+    </div>
+
+    <script src="./renderer.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "name": "electron-steg",
+  "version": "1.0.0",
+  "description": "Simple Steganography Tool using Electron and Tailwind CSS",
+  "main": "main.js",
+  "scripts": {
+    "start": "concurrently \"npm:watch:css\" \"electron .\"",
+    "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "package": "npm run build:css && echo 'Packaging script placeholder - install electron-builder or similar'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "steganography",
+    "electron",
+    "lsb",
+    "tailwind"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
+    "electron": "^29.3.0",
+    "electron-builder": "^26.0.12",
+    "jimp": "^0.22.12",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3"
+  }
+}
